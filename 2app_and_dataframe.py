@@ -8,14 +8,14 @@ db = SQLAlchemy(app)
 
 
 # Определяем модель базы данных (в каком столбе какой тип данных)
-class ingredient(db.Model):
+class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), unique=True, nullable=False)
     category = db.Column(db.String(120), unique=True, nullable=False)
 
-    # что здесь происходит
+    # Упрощение читаемости файла
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<Ingredient %r>' % self.title
 
 
 #  Получаем информацию по ингредиенту
