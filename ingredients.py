@@ -4,12 +4,10 @@ from flask_sqlalchemy import SQLAlchemy  # конструктор приложе
 from main import db
 from main import app
 
-
 # Определяем модель базы данных (в каком столбе какой тип данных)
 
-
 class Ingredient(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=False)
     title = db.Column(db.String(80), unique=True, nullable=False)
     category = db.Column(db.String(120), unique=True, nullable=False)
 
