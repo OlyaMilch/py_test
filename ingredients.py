@@ -8,8 +8,8 @@ from main import app
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=False)
-    title = db.Column(db.String(80), unique=True, nullable=False)
-    category = db.Column(db.String(120), unique=True, nullable=False)
+    title = db.Column(db.String(80), unique=False, nullable=False)
+    category = db.Column(db.String(120), unique=False, nullable=False)
 
     # Упрощаем читаемость кода
     def __repr__(self):
