@@ -9,12 +9,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'  # путь к баз
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # отключаем предупреждения об изменения от Фласк
 db = SQLAlchemy(app)
 
-
-@app.route("/")
-def my_lover_function():
-    return 'дайте хоть шо-то'
-
-
 from ingredients import *
 
 if __name__ == "__main__":
