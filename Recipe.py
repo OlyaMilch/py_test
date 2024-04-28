@@ -22,7 +22,7 @@ def get_recipes():
     recipes = Recipe.query.all()
     return jsonify(
         [{'id_r': recipe.id_r, 'title': recipe.title, 'description': recipe.description} for recipe in
-         recipes])
+         recipes]), 200
 
 
 # Получаем информацию по айди (здесь id_r, чтобы не конфликтовал с id ингредиентов)
@@ -30,10 +30,10 @@ def get_recipes():
 def get_recipe_by_id(id_r: int):
     recipe = Recipe.query.get(id_r)
     if recipe == 'None':
-        print("Рецепт не найден")
+        return "Рецепт не найден"
     else:
         return jsonify(
-            {'id_i': recipe.id_r, 'title': recipe.title, 'description': recipe.description}), 201
+            {'id_i': recipe.id_r, 'title': recipe.title, 'description': recipe.description}), 200
 
 
 # Добавляем новую запись (требуется название и категория ингредиента, айди само поставится по порядку)
@@ -43,7 +43,7 @@ def create_recipe():
     new_recipe = Recipe(title=data['title'], category=data['category'])
     db.session.add(new_recipe)
     db.session.commit()
-    return jsonify({'id_r': new_recipe.id_r, 'title': new_recipe.title, 'description': new_recipe.category}), 201
+    return jsonify({'id_r': new_recipe.id_r, 'title': new_recipe.title, 'description': new_recipe.category}), 200
 
 
 # удаление информации о рецепте
