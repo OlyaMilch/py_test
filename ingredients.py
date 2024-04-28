@@ -18,21 +18,22 @@ class Ingredient(db.Model):
 
 #  Получаем информацию по ингредиенту
 @app.route('/ingredients', methods=['GET'])  # Смотрим весь список
-def get_ingredient():
+def get_ingredients():
     ingredients = Ingredient.query.all()
     return jsonify(
-        [{'id_i': Ingredient.id_i, 'username': Ingredient.title, 'category': Ingredient.category} for Ingr in
+        [{'id_i': ingr.id_i, 'title': ingr.title, 'category': ingr.category} for ingr in
          ingredients])
 
 
 # Получаем информацию по айди
-@app.route('/id_i/<int:id_i>', methods=['GET'])
-def get_id_ingredient(id_i):
+@app.route('/ingredient/<int:id_i>', methods=['GET'])
+def get_ingredient_by_id(id_i):
     ingredient = Ingredient.query.get(id_i)
-    return jsonify(ingredient)
+    if ingredient == 'None':
+        print('Рецепт не найден')
+    return jsonify({'id_i': ingredient.id_i, 'title': ingredient.title, 'category': ingredient.category}),
 
 
-# Добавляем новую запись (требуется название и категория ингредиента, айди само поставится по порядку)
 @app.route('/ingredient', methods=['POST'])
 def create_ingredient():
     data = request.json
@@ -44,8 +45,8 @@ def create_ingredient():
 
 
 # удаление информации о ингредиенте
-@app.route('/delete/<int:id>', methods=['DELETE'])
-def delete_recipe(id_i: int):
+@app.route('/recipe/<int:id>', methods=['DELETE'])
+def delete_ingredient(id_i: int):
     try:
         ingredient = Ingredient.query.get(id_i)  # query - запрос
         db.session.delete(ingredient)  # удаление всей записи по id
