@@ -7,7 +7,7 @@ from main import db
 # Определяем модель базы данных (в каком столбе какой тип данных)
 
 class Recipe(db.Model):
-    id_r = db.Column(db.Integer, primary_key=True)
+    id_r = db.Column(db.Integer, unique=True, primary_key=True)
     title = db.Column(db.String(80), unique=False, nullable=False)
     description = db.Column(db.String(120), unique=False, nullable=False)
 
@@ -21,19 +21,23 @@ class Recipe(db.Model):
 def get_recipes():
     recipes = Recipe.query.all()
     return jsonify(
-        [{'id_r': Recipe.id_r, 'title': Recipe.title, 'description': Recipe.description} for recipe in
+        [{'id_r': recipe.id_r, 'title': recipe.title, 'description': recipe.description} for recipe in
          recipes])
 
 
 # Получаем информацию по айди (здесь id_r, чтобы не конфликтовал с id ингредиентов)
-@app.route('/id_r/<int:id_r>', methods=['GET'])
-def get_id_recipes(id_r):
+@app.route('/recipe/<int:id_r>', methods=['GET'])
+def get_recipe_by_id(id_r: int):
     recipe = Recipe.query.get(id_r)
-    return jsonify(recipe)
+    if recipe == 'None':
+        print("Рецепт не найден")
+    else:
+        return jsonify(
+            {'id_i': recipe.id_r, 'title': recipe.title, 'description': recipe.description}), 201
 
 
 # Добавляем новую запись (требуется название и категория ингредиента, айди само поставится по порядку)
-@app.route('/newrecipe', methods=['POST'])
+@app.route('/recipe', methods=['POST'])
 def create_recipe():
     data = request.json
     new_recipe = Recipe(title=data['title'], category=data['category'])
