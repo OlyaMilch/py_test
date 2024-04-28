@@ -22,7 +22,7 @@ def get_ingredients():
     ingredients = Ingredient.query.all()
     return jsonify(
         [{'id_i': ingr.id_i, 'title': ingr.title, 'category': ingr.category} for ingr in
-         ingredients])
+         ingredients]), 200
 
 
 # Получаем информацию по айди
@@ -30,8 +30,8 @@ def get_ingredients():
 def get_ingredient_by_id(id_i):
     ingredient = Ingredient.query.get(id_i)
     if ingredient == 'None':
-        print('Рецепт не найден')
-    return jsonify({'id_i': ingredient.id_i, 'title': ingredient.title, 'category': ingredient.category}),
+        return 'Рецепт не найден'
+    return jsonify({'id_i': ingredient.id_i, 'title': ingredient.title, 'category': ingredient.category}), 200
 
 
 @app.route('/ingredient', methods=['POST'])
@@ -41,7 +41,7 @@ def create_ingredient():
     db.session.add(new_ingredient)
     db.session.commit()
     return jsonify(
-        {'id_i': new_ingredient.id_i, 'title': new_ingredient.title, 'category': new_ingredient.category}), 201
+        {'id_i': new_ingredient.id_i, 'title': new_ingredient.title, 'category': new_ingredient.category}), 200
 
 
 # удаление информации о ингредиенте
