@@ -10,6 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # отключаем пр�
 db = SQLAlchemy(app)
 
 from ingredients import *
+from Recipe import *
 
 if __name__ == "__main__":
     app.run(debug=True)  # пока тру, т.к. надо видеть ошибки. Потом сменить на фолс, чтобы клиенты их не видели
