@@ -2,7 +2,6 @@ import os  # библиотека, позволяет работать с сис
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-dirname = os.path.dirname(__file__)  # ищем  путь
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'  # путь к базе данных
@@ -13,4 +12,6 @@ from ingredients import *
 from Recipe import *
 
 if __name__ == "__main__":
+    with app.app_context():  # с with дали контекст для create_all
+        db.create_all()  # создаем бд, если ее нет
     app.run(debug=True)  # пока тру, т.к. надо видеть ошибки. Потом сменить на фолс, чтобы клиенты их не видели
