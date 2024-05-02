@@ -29,7 +29,7 @@ def get_ingredients():
 @app.route('/ingredient/<int:id_i>', methods=['GET'])
 def get_ingredient_by_id(id_i):
     ingredient = Ingredient.query.get(id_i)
-    if ingredient == 'None':
+    if ingredient == None:
         return 'Рецепт не найден'
     return jsonify({'id_i': ingredient.id_i, 'title': ingredient.title, 'category': ingredient.category}), 200
 
