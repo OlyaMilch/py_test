@@ -2,11 +2,12 @@ from flask import jsonify, request, Flask
 from flask_sqlalchemy import SQLAlchemy
 from main import app
 from main import db
+import json
 
 
 # Определяем модель базы данных (в каком столбе какой тип данных)
 
-class Ingredient(db.Model):
+class Ingredient(db.Model):  # в скобках связали таблицу с бд
     id_i = db.Column(db.Integer, unique=True, primary_key=True)
     title = db.Column(db.String(80), unique=False, nullable=False)
     category = db.Column(db.String(120), unique=False, nullable=False)
@@ -23,15 +24,23 @@ def get_ingredients():
     return jsonify(
         [{'id_i': ingr.id_i, 'title': ingr.title, 'category': ingr.category} for ingr in
          ingredients]), 200
+    # network_ingredients = []
+    # for ingredient in ingredients:
+    #     network_ingredient = MapNetwork.map_ingredient(ingredient)
+    #     network_ingredients.append(network_ingredient)
+    #
+    # return list(map(lambda network_ingredient: network_ingredient.to_json(), network_ingredients))
+    # # return network_ingredients.to_json(), 200
 
 
 # Получаем информацию по айди
 @app.route('/ingredient/<int:id_i>', methods=['GET'])
 def get_ingredient_by_id(id_i):
     ingredient = Ingredient.query.get(id_i)
-    if ingredient == None:
+    if ingredient == None:  # сначала проверка, потом маппер
         return 'Рецепт не найден'
-    return jsonify({'id_i': ingredient.id_i, 'title': ingredient.title, 'category': ingredient.category}), 200
+    network_ingredient = MapNetwork.map_ingredient(ingredient)
+    return network_ingredient.to_json(), 200
 
 
 @app.route('/ingredient', methods=['POST'])
@@ -40,8 +49,8 @@ def create_ingredient():
     new_ingredient = Ingredient(title=data['title'], category=data['category'])
     db.session.add(new_ingredient)
     db.session.commit()
-    return jsonify(
-        {'id_i': new_ingredient.id_i, 'title': new_ingredient.title, 'category': new_ingredient.category}), 200
+    network_ingredient = MapNetwork.map_ingredient(new_ingredient)
+    return network_ingredient.to_json(), 200
 
 
 # удаление информации о ингредиенте
@@ -53,3 +62,19 @@ def delete_ingredient(id_i: int):
         db.session.commit()
     except Exception:
         return "Ингредиент не найден"
+
+
+class NetworkIngredient:  # этот класс не связан с таблицами
+    def __init__(self, id_i: int, title: str, category: str):
+        self.id_i = id_i
+        self.title = title
+        self.category = category
+
+    def to_json(self):  # просто селф, т.к. мы УЖЕ внутри класса NetworkIngredient
+        data = json.dumps(self.__dict__)  # дикт возвращает все по ключам
+        return data
+
+class MapNetwork:
+    @classmethod  # не cоздаем объект от класса, а вызываем объект от класса
+    def map_ingredient(cls, ingredient: Ingredient):  # cls-обозначает класс, а не объект
+        return NetworkIngredient(ingredient.id_i, ingredient.title, ingredient.category)  # возвращает созданный объект
