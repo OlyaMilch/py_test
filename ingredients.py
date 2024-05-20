@@ -21,16 +21,11 @@ class Ingredient(db.Model):  # в скобках связали таблицу �
 @app.route('/ingredients', methods=['GET'])  # Смотрим весь список
 def get_ingredients():
     ingredients = Ingredient.query.all()
-    return jsonify(
-        [{'id_i': ingr.id_i, 'title': ingr.title, 'category': ingr.category} for ingr in
-         ingredients]), 200
-    # network_ingredients = []
-    # for ingredient in ingredients:
-    #     network_ingredient = MapNetwork.map_ingredient(ingredient)
-    #     network_ingredients.append(network_ingredient)
-    #
-    # return list(map(lambda network_ingredient: network_ingredient.to_json(), network_ingredients))
-    # # return network_ingredients.to_json(), 200
+    network_ingredient = [
+        MapNetwork.map_ingredient(ingr).__dict__  # без дикта не очень красивый вывод
+        for ingr in ingredients
+    ]  # перебрали элементы, смаппили их и в json перевели
+    return json.dumps(network_ingredient), 200  # вывод на одной строке в браузере благодаря json
 
 
 # Получаем информацию по айди
@@ -73,6 +68,7 @@ class NetworkIngredient:  # этот класс не связан с табли�
     def to_json(self):  # просто селф, т.к. мы УЖЕ внутри класса NetworkIngredient
         data = json.dumps(self.__dict__)  # дикт возвращает все по ключам
         return data
+
 
 class MapNetwork:
     @classmethod  # не cоздаем объект от класса, а вызываем объект от класса
