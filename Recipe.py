@@ -24,9 +24,11 @@ def get_recipes():
     """
 
     recipes = Recipe.query.all()
-    return jsonify(
-        [{'id_r': recipe.id_r, 'title': recipe.title, 'description': recipe.description} for recipe in
-         recipes]), 200
+    network_recipe = [
+        RecipeToNetworkRecipeMapper.map(recipe).__dict__  # дикт для вывода всех данных
+        for recipe in recipes
+    ]  # перебрали элементы, смаппили их и в json перевели
+    return json.dumps(network_recipe), 200  # вывод на одной строке в браузере благодаря json
 
 
 @app.route('/recipe/<int:id_r>', methods=['GET'])
@@ -36,11 +38,11 @@ def get_recipe_by_id(id_r: int):
     """
 
     recipe = Recipe.query.get(id_r)
-    if recipe is None:
-        return "Recipe not found"
+    if recipe is None:  # сначала проверка, потом маппер
+        return 'Recipe not found'
     else:
-        return jsonify(
-            {'id_i': recipe.id_r, 'title': recipe.title, 'description': recipe.description}), 200
+        network_recipe = RecipeToNetworkRecipeMapper.map(recipe)
+        return network_recipe.to_json(), 200
 
 
 @app.route('/recipe', methods=['POST'])
@@ -53,7 +55,8 @@ def create_recipe():
     new_recipe = Recipe(title=data['title'], category=data['category'])
     db.session.add(new_recipe)
     db.session.commit()
-    return jsonify({'id_r': new_recipe.id_r, 'title': new_recipe.title, 'description': new_recipe.category}), 200
+    network_recipe = RecipeToNetworkRecipeMapper.map(new_recipe)
+    return network_recipe.to_json(), 200
 
 
 @app.route('/recipe/<int:id_r>', methods=['DELETE'])
@@ -68,3 +71,7 @@ def delete_recipe(id_r: int):
         db.session.commit()
     except Exception:
         return "Recipe not found"
+
+
+from class_NetworkRecipe import *
+from class_RecipeToNetworkRecipeMapper import *
