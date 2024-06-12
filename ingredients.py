@@ -1,7 +1,6 @@
 from flask import request
 from main import app
 from main import db
-import json
 
 
 # Определяем модель базы данных (в каком столбе какой тип данных)
@@ -43,8 +42,9 @@ def get_ingredient_by_id(id_i):
     ingredient = Ingredient.query.get(id_i)
     if ingredient is None:  # сначала проверка, потом маппер
         return 'Ingredient not found'
-    network_ingredient = IngredientToNetworkIngredientMapper.map(ingredient)
-    return network_ingredient.to_json(), 200
+    else:
+        network_ingredient = IngredientToNetworkIngredientMapper.map(ingredient)
+        return network_ingredient.to_json(), 200
 
 
 @app.route('/ingredient', methods=['POST'])
@@ -71,18 +71,5 @@ def delete_ingredient(id_i: int):
         return "Ingredient not found"
 
 
-class NetworkIngredient:  # этот класс не связан с таблицами
-    def __init__(self, id_i: int, title: str, category: str):
-        self.id_i = id_i
-        self.title = title
-        self.category = category
-
-    def to_json(self):  # просто селф, т.к. мы УЖЕ внутри класса NetworkIngredient
-        data = json.dumps(self.__dict__)  # дикт возвращает все по ключам
-        return data
-
-
-class IngredientToNetworkIngredientMapper:
-    @classmethod  # не cоздаем объект от класса, а вызываем объект от класса
-    def map(cls, ingredient: Ingredient):  # cls-обозначает класс, а не объект
-        return NetworkIngredient(ingredient.id_i, ingredient.title, ingredient.category)  # возвращает созданный объект
+from class_NetworkIngredient import *
+from class_IngredientToNetworkIngredientMapper import *
