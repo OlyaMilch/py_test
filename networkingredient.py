@@ -1,4 +1,6 @@
 import json
+
+
 class NetworkIngredient:  # этот класс не связан с таблицами
     def __init__(self, id_i: int, title: str, category: str):
         self.id_i = id_i
