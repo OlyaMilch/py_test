@@ -1,22 +1,9 @@
 from flask import request
+from Ingredient import Ingredient
 from main import app
 from main import db
-
-
-# Определяем модель базы данных (в каком столбе какой тип данных)
-
-class Ingredient(db.Model):
-    """
-    Create database
-    """
-
-    id_i = db.Column(db.Integer, unique=True, primary_key=True)
-    title = db.Column(db.String(80), unique=False, nullable=False)
-    category = db.Column(db.String(120), unique=False, nullable=False)
-
-    # Упрощаем читаемость кода
-    def __repr__(self):
-        return f'<Ingredient {self.title}'
+import json
+from ingredientmapper import IngredientToNetworkIngredientMapper
 
 
 @app.route('/ingredients', methods=['GET'])  # Смотрим весь список
@@ -42,9 +29,8 @@ def get_ingredient_by_id(id_i):
     ingredient = Ingredient.query.get(id_i)
     if ingredient is None:  # сначала проверка, потом маппер
         return 'Ingredient not found'
-    else:
-        network_ingredient = IngredientToNetworkIngredientMapper.map(ingredient)
-        return network_ingredient.to_json(), 200
+    network_ingredient = IngredientToNetworkIngredientMapper.map(ingredient)
+    return network_ingredient.to_json(), 200
 
 
 @app.route('/ingredient', methods=['POST'])
@@ -69,7 +55,3 @@ def delete_ingredient(id_i: int):
         db.session.commit()
     except Exception:
         return "Ingredient not found"
-
-
-from class_NetworkIngredient import *
-from class_IngredientToNetworkIngredientMapper import *
