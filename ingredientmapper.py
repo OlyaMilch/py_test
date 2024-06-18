@@ -1,5 +1,7 @@
-from class_NetworkIngredient import *
-from ingredients import *
+from networkingredient import NetworkIngredient
+from ingredients import Ingredient
+
+
 class IngredientToNetworkIngredientMapper:
     @classmethod  # не cоздаем объект от класса, а вызываем объект от класса
     def map(cls, ingredient: Ingredient):  # cls-обозначает класс, а не объект
