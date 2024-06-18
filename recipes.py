@@ -1,20 +1,9 @@
 from flask import jsonify, request
+from Recipe import Recipe
 from main import app
 from main import db
-
-
-class Recipe(db.Model):
-    """
-    Create database
-    """
-
-    id_r = db.Column(db.Integer, unique=True, primary_key=True)
-    title = db.Column(db.String(80), unique=False, nullable=False)
-    description = db.Column(db.String(120), unique=False, nullable=False)
-
-    # Упрощаем читаемость кода
-    def __repr__(self):
-        return f'<Recipe {self.title}'
+import json
+from recipemapper import RecipeToNetworkRecipeMapper
 
 
 @app.route('/recipes', methods=['GET'])  # Смотрим весь список
@@ -40,9 +29,8 @@ def get_recipe_by_id(id_r: int):
     recipe = Recipe.query.get(id_r)
     if recipe is None:  # сначала проверка, потом маппер
         return 'Recipe not found'
-    else:
-        network_recipe = RecipeToNetworkRecipeMapper.map(recipe)
-        return network_recipe.to_json(), 200
+    network_recipe = RecipeToNetworkRecipeMapper.map(recipe)
+    return network_recipe.to_json(), 200
 
 
 @app.route('/recipe', methods=['POST'])
@@ -71,7 +59,3 @@ def delete_recipe(id_r: int):
         db.session.commit()
     except Exception:
         return "Recipe not found"
-
-
-from networkrecipe import *
-from recipemapper import *
