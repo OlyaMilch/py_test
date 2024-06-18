@@ -1,5 +1,5 @@
-from Recipe import *
-from class_NetworkRecipe import *
+from recipes import Recipe
+from networkrecipe import NetworkRecipe
 
 
 class RecipeToNetworkRecipeMapper:
