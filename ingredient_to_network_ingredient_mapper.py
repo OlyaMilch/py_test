@@ -1,4 +1,4 @@
-from networkingredient import NetworkIngredient
+from network_ingredient import NetworkIngredient
 from ingredients import Ingredient
 
 
