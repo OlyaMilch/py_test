@@ -1,9 +1,9 @@
 from flask import request
-from Ingredient import Ingredient
+from ingredient import Ingredient
 from main import app
 from main import db
 import json
-from ingredientmapper import IngredientToNetworkIngredientMapper
+from ingredient_to_network_ingredient_mapper import IngredientToNetworkIngredientMapper
 
 
 @app.route('/ingredients', methods=['GET'])  # Смотрим весь список
