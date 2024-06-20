@@ -1,23 +1,9 @@
 from flask import request
+from ingredient import Ingredient
 from main import app
 from main import db
 import json
-
-
-# Определяем модель базы данных (в каком столбе какой тип данных)
-
-class Ingredient(db.Model):
-    """
-    Create database
-    """
-
-    id_i = db.Column(db.Integer, unique=True, primary_key=True)
-    title = db.Column(db.String(80), unique=False, nullable=False)
-    category = db.Column(db.String(120), unique=False, nullable=False)
-
-    # Упрощаем читаемость кода
-    def __repr__(self):
-        return f'<Ingredient {self.title}'
+from ingredient_to_network_ingredient_mapper import IngredientToNetworkIngredientMapper
 
 
 @app.route('/ingredients', methods=['GET'])  # Смотрим весь список
@@ -69,20 +55,3 @@ def delete_ingredient(id_i: int):
         db.session.commit()
     except Exception:
         return "Ingredient not found"
-
-
-class NetworkIngredient:  # этот класс не связан с таблицами
-    def __init__(self, id_i: int, title: str, category: str):
-        self.id_i = id_i
-        self.title = title
-        self.category = category
-
-    def to_json(self):  # просто селф, т.к. мы УЖЕ внутри класса NetworkIngredient
-        data = json.dumps(self.__dict__)  # дикт возвращает все по ключам
-        return data
-
-
-class IngredientToNetworkIngredientMapper:
-    @classmethod  # не cоздаем объект от класса, а вызываем объект от класса
-    def map(cls, ingredient: Ingredient):  # cls-обозначает класс, а не объект
-        return NetworkIngredient(ingredient.id_i, ingredient.title, ingredient.category)  # возвращает созданный объект

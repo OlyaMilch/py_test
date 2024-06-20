@@ -9,8 +9,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # отключаем пр�
 db = SQLAlchemy(app)
 
 from ingredients import *
-from Recipe import *
-from RecipeStep import *
+from recipes import *
+from recipe_step import *
 
 if __name__ == "__main__":
     with app.app_context():  # с with дали контекст для create_all
