@@ -1,9 +1,9 @@
 from flask import jsonify, request
-from Recipe import Recipe
+from recipe import Recipe
 from main import app
 from main import db
 import json
-from recipemapper import RecipeToNetworkRecipeMapper
+from recipe_to_network_recipe_mapper import RecipeToNetworkRecipeMapper
 
 
 @app.route('/recipes', methods=['GET'])  # Смотрим весь список
