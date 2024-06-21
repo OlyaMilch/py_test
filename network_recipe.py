@@ -2,8 +2,8 @@ import json
 
 
 class NetworkRecipe:  # этот класс не связан с таблицами
-    def __init__(self, id_r: int, title: str, description: str):
-        self.id_r = id_r
+    def __init__(self, id: int, title: str, description: str):
+        self.id = id
         self.title = title
         self.description = description
 
